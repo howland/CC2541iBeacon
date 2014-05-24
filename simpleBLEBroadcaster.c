@@ -132,21 +132,41 @@ static uint8 scanRspData[] =
 
 // GAP - Advertisement data (max size = 31 bytes, though this is
 // best kept short to conserve power while advertisting)
-static uint8 advertData[] = 
-{ 
-  // Flags; this sets the device to use limited discoverable
-  // mode (advertises for 30 seconds at a time) instead of general
-  // discoverable mode (advertises indefinitely)
-  0x02,   // length of this data
-  GAP_ADTYPE_FLAGS,
-  GAP_ADTYPE_FLAGS_BREDR_NOT_SUPPORTED,
-
-  // three-byte broadcast of the data "1 2 3"
-  0x04,   // length of this data including the data type byte
-  GAP_ADTYPE_MANUFACTURER_SPECIFIC,      // manufacturer specific advertisement data type
-  1,
-  2,
-  3
+static uint8 advertData[] =
+{
+  // 25 byte ibeacon advertising data
+  // Preamble: 0x4c000215
+  // UUID: E2C56DB5-DFFB-48D2-B060-D0F5A71096E0
+  // Major: 1 (0x0001)
+  // Minor: 1 (0x0001)
+  // Measured Power: -59 (0xc5)
+  0x1A, // length of this data including the data type byte
+  GAP_ADTYPE_MANUFACTURER_SPECIFIC, // manufacturer specific advertisement data type
+  0x4c,
+  0x00,
+  0x02,
+  0x15,
+  0xe2,
+  0xc5,
+  0x6d,
+  0xb5,
+  0xdf,
+  0xfb,
+  0x48,
+  0xd2,
+  0xb0,
+  0x60,
+  0xd0,
+  0xf5,
+  0xa7,
+  0x10,
+  0x96,
+  0xe0,
+  0x00,
+  0x01,
+  0x00,
+  0x01,
+  0xc5
 };
 
 /*********************************************************************
@@ -211,14 +231,14 @@ void SimpleBLEBroadcaster_Init( uint8 task_id )
     // until the enabler is set back to TRUE
     uint16 gapRole_AdvertOffTime = 0;
       
-    //uint8 advType = GAP_ADTYPE_ADV_NONCONN_IND;   // use non-connectable advertisements
-    uint8 advType = GAP_ADTYPE_ADV_SCAN_IND; // use scannable unidirected advertisements
+    uint8 advType = GAP_ADTYPE_ADV_NONCONN_IND;   // use non-connectable advertisements
+    //uint8 advType = GAP_ADTYPE_ADV_SCAN_IND; // use scannable unidirected advertisements
 
     // Set the GAP Role Parameters
     GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &initial_advertising_enable );
-    GAPRole_SetParameter( GAPROLE_ADVERT_OFF_TIME, sizeof( uint16 ), &gapRole_AdvertOffTime );
+    //GAPRole_SetParameter( GAPROLE_ADVERT_OFF_TIME, sizeof( uint16 ), &gapRole_AdvertOffTime );
     
-    GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );
+    //GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );
     GAPRole_SetParameter( GAPROLE_ADVERT_DATA, sizeof( advertData ), advertData );
 
     GAPRole_SetParameter( GAPROLE_ADV_EVENT_TYPE, sizeof( uint8 ), &advType );
